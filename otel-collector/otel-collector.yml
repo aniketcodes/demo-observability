@@ -8,18 +8,17 @@ receivers:
 
 processors:
   batch:
-    timeout: 5s
-    send_batch_size: 1000
+    timeout: 1s
+    send_batch_size: 1024
 
 exporters:
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-    namespace: "otel"
-
   otlp/tempo:
-    endpoint: "tempo:4317"
+    endpoint: tempo:4317
     tls:
       insecure: true
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: demo
 
 service:
   pipelines:
@@ -27,7 +26,6 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlp/tempo]
-
     metrics:
       receivers: [otlp]
       processors: [batch]
