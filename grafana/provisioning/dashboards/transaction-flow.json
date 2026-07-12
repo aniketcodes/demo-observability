@@ -1,201 +1,43 @@
 {
-  "uid": "transaction-flow",
-  "title": "Transaction Flow",
-  "tags": ["demo", "flowmap", "snowflake-bug"],
-  "timezone": "browser",
-  "schemaVersion": 39,
-  "version": 1,
-  "refresh": "5s",
-  "time": {
-    "from": "now-15m",
-    "to": "now"
-  },
-  "templating": {
-    "list": []
-  },
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "id": 1,
-      "type": "stat",
       "title": "Payments Created",
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "payment_transactions_created_total",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "value",
-        "graphMode": "area"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null }
-            ]
-          },
-          "unit": "short"
-        }
-      }
+      "type": "stat",
+      "targets": [{ "expr": "sum(rate(payment_transactions_created_total[5m]))" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }] } } }
     },
     {
-      "id": 2,
-      "type": "stat",
       "title": "Orders Processed",
-      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "order_processed_total",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "value",
-        "graphMode": "area"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "blue", "value": null }
-            ]
-          },
-          "unit": "short"
-        }
-      }
-    },
-    {
-      "id": 3,
       "type": "stat",
-      "title": "Ledger Lookups: Found",
-      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "ledger_transactions_found_total",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "value",
-        "graphMode": "area"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null }
-            ]
-          },
-          "unit": "short"
-        }
-      }
+      "targets": [{ "expr": "sum(rate(order_processed_total[5m]))" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "blue", "value": null }] } } }
     },
     {
-      "id": 4,
+      "title": "Ledger Found",
       "type": "stat",
-      "title": "Ledger Lookups: NOT FOUND",
-      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "ledger_transactions_not_found_total",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "value",
-        "graphMode": "area"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "red", "value": null }
-            ]
-          },
-          "unit": "short"
-        }
-      }
+      "targets": [{ "expr": "sum(rate(ledger_transactions_found_total[5m]))" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }] } } }
     },
     {
-      "id": 5,
-      "type": "timeseries",
-      "title": "Transaction Flow Rate (per service)",
-      "gridPos": { "x": 0, "y": 4, "w": 24, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "rate(payment_transactions_created_total[1m])",
-          "refId": "A",
-          "legendFormat": "payment → order"
-        },
-        {
-          "expr": "rate(order_processed_total[1m])",
-          "refId": "B",
-          "legendFormat": "order → ledger"
-        },
-        {
-          "expr": "rate(ledger_transactions_found_total[1m])",
-          "refId": "C",
-          "legendFormat": "ledger: found"
-        },
-        {
-          "expr": "rate(ledger_transactions_not_found_total[1m])",
-          "refId": "D",
-          "legendFormat": "ledger: NOT FOUND"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ops",
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          }
-        }
-      },
-      "options": {
-        "legend": { "displayMode": "table", "placement": "bottom" }
-      }
-    },
-    {
-      "id": 6,
-      "type": "logs",
-      "title": "Recent Logs (all services)",
-      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 10 },
-      "datasource": { "type": "loki", "uid": "loki" },
-      "targets": [
-        {
-          "expr": "{job=\"demo-services\"}",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "showLabels": true,
-        "showTime": true,
-        "wrapLogMessage": true,
-        "prettifyLogMessage": false,
-        "enableLogDetails": true,
-        "dedupStrategy": "none",
-        "sortOrder": "Descending"
-      }
+      "title": "Ledger NOT FOUND",
+      "type": "stat",
+      "targets": [{ "expr": "sum(rate(ledger_transactions_not_found_total[5m]))" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "red", "value": 0 }] } } }
     }
-  ]
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["demo"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Transaction Flow",
+  "uid": "transaction-flow",
+  "version": 1
 }
