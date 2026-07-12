@@ -1,6 +1,5 @@
 server:
   http_listen_port: 9080
-  grpc_listen_port: 0
 
 positions:
   filename: /tmp/positions.yaml
@@ -9,14 +8,16 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: demo-services
+  - job_name: demo-logs
     static_configs:
-      - targets: [localhost]
+      - targets:
+          - localhost
         labels:
           job: demo-services
           __path__: /var/log/demo/*.log
+
     pipeline_stages:
       - regex:
-          expression: '^(?P<service>\w+)\s'
+          expression: '.*"service":"(?P<service>[^"]+)".*'
       - labels:
           service:
