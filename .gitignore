@@ -1,0 +1,9 @@
+*.log
+.env
+.env.local
+grafana-data/
+prometheus-data/
+tempo-data/
+loki-data/
+promtail-positions/
+demo-logs/
