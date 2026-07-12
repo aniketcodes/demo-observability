@@ -7,7 +7,6 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: true
-    uid: prometheus
 
   - name: Tempo
     type: tempo
@@ -15,13 +14,6 @@ datasources:
     url: http://tempo:3200
     editable: true
     uid: tempo
-    jsonData:
-      tracesToMetrics:
-        datasourceUid: prometheus
-      search:
-        hide: false
-      nodeGraph:
-        enabled: true
 
   - name: Loki
     type: loki
@@ -29,6 +21,3 @@ datasources:
     url: http://loki:3100
     editable: true
     uid: loki
-    jsonData:
-      maxLines: 1000
-      timeout: 60
